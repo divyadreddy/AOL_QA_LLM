@@ -1,6 +1,6 @@
 from langchain.chains import create_history_aware_retriever, create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
-from langchain_chroma import Chroma
+from langchain_community.vectorstores import FAISS
 from langchain_community.chat_message_histories import ChatMessageHistory
 from langchain_community.document_loaders.text import TextLoader
 from langchain_core.chat_history import BaseChatMessageHistory
@@ -11,28 +11,29 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.messages import AIMessage, HumanMessage
 import streamlit as st
 
-# Creates and store data as Chroma vectorstore (DB) in ./chroma_db
-def create_vectorstore():
+# Creates and store data as FAISS (DB) in faiss_index
+def create_db():
     ### Construct retriever ###
     loader = TextLoader('./QA_data_final.txt')
     docs = loader.load()
 
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
     splits = text_splitter.split_documents(docs)
-    vectorstore = Chroma.from_documents(documents=splits, 
-                                                                persist_directory='./chroma_db',
-                                                                embedding=OpenAIEmbeddings(api_key=st.secrets['openai']["OPENAI_API_KEY"]))
-    vectorstore.persist()
+    db = FAISS.from_documents(splits, OpenAIEmbeddings(api_key=st.secrets['openai']["OPENAI_API_KEY"]))
 
-    return vectorstore
+    db.save_local("faiss_index")
+
+    return db
 
 @st.cache_resource
 def create_llm():
     llm = ChatOpenAI(openai_api_key=st.secrets['openai']["OPENAI_API_KEY"], model="gpt-3.5-turbo", temperature=0)
 
-    vectorstore =Chroma(persist_directory='./chroma_db', embedding_function=OpenAIEmbeddings(api_key=st.secrets['openai']["OPENAI_API_KEY"]))
+    db =FAISS.load_local('faiss_index', 
+                                    OpenAIEmbeddings(api_key=st.secrets['openai']["OPENAI_API_KEY"]), 
+                                    allow_dangerous_deserialization=True)
     
-    retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
+    retriever = db.as_retriever(search_kwargs={"k": 5})
 
     ### Contextualize question ###
     contextualize_q_system_prompt = (

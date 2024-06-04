@@ -1,10 +1,3 @@
-__import__('pysqlite3')
-import sys
-sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
-
-import chromadb
-import chromadb.config
-
 import streamlit as st
 from PIL import Image
 
@@ -53,7 +46,6 @@ with st.sidebar:
     st.image('./imgs/sri_sri.png', use_column_width=True)
     st.markdown(desc, unsafe_allow_html=True)
 
-
 for message in st.session_state.messages:
     st.chat_message(message["role"], avatar=icon[message["role"]]).write(message["content"])
 
@@ -64,7 +56,8 @@ if question := st.chat_input("Ask Gurudev...", key="chat_input_placeholder"):
     with st.chat_message("user", avatar=icon["user"]):
         st.markdown(question)
 
-    answer = ask_sri_sri(question, list(st.session_state.messages))
+    with st.spinner('Please wait...'):
+        answer = ask_sri_sri(question, list(st.session_state.messages))
     # Display assistant response in chat message container
     with st.chat_message("assistant", avatar=icon["assistant"]):
         st.markdown(answer)
