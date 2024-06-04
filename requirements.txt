@@ -1,6 +1,6 @@
 beautifulsoup4==4.10.0
-chromadb>=0.4.14
-langchain<0.2
+chromadb==0.4.0
+langchain
 langchain-chroma
 langchain-community
 langchain-core
