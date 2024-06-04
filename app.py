@@ -5,10 +5,6 @@ from elements import headAndCss, title, desc, img_to_html
 from LLM import create_llm
 from collections import deque 
 
-__import__('pysqlite3')
-import sys
-sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
-
 # Website
 st.set_page_config(
     page_icon=Image.open('./imgs/title_icon.png'),
