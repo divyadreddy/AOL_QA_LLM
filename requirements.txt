@@ -17,3 +17,4 @@ openai==1.30.5
 Pillow==9.0.1
 streamlit==1.35.0
 streamlit-chat==0.0.2.2
+sqlite3 >= 3.35.0
