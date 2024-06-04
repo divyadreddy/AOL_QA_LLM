@@ -14,8 +14,8 @@ headAndCss ='''
 		:root {
 			--primary-color: #884EA0;
 
-			--primary-bg: #F9F5F6;
-			--secondary-bg: #F3D0D7;
+			--primary-bg: #FFFFFF;
+			--secondary-bg: #5E1675;
 		}
 		.subHead {
 			color: var(--primary-color);
