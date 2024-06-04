@@ -1,0 +1,9 @@
+[theme] 
+primaryColor = '#884EA0' 
+
+textColor ='#000000' 
+
+backgroundColor = '#FFFFFF'
+secondaryBackgroundColor ='#5E1675' 
+# secondaryBackgroundColor = '#7F5283' 
+# secondaryBackgroundColor ='#FFD1E3'  #light pink
